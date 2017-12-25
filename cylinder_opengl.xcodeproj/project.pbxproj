@@ -29,6 +29,8 @@
 		AC14F7DA1FEDB48D00E5C7B1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		AC14F7E21FEDB49E00E5C7B1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		AC14F7E41FEDB4FB00E5C7B1 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		ACF6A3901FF112DB002FB9B5 /* cam.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cam.hpp; sourceTree = "<group>"; };
+		ACF6A3921FF172BD002FB9B5 /* dreidee.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dreidee.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				AC14F7DA1FEDB48D00E5C7B1 /* main.cpp */,
+				ACF6A3901FF112DB002FB9B5 /* cam.hpp */,
+				ACF6A3921FF172BD002FB9B5 /* dreidee.hpp */,
 			);
 			path = cylinder_opengl;
 			sourceTree = "<group>";
