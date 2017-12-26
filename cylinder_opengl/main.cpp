@@ -17,13 +17,13 @@ GLdouble width, height;   /* window width and height */
 int wd;                   /* GLUT window handle */
 
 camera cam;
-dreidee::vec3i cols[11*33];
+dreidee::vec3f cols[10*33];
 
 enum rotation {rot_vert, rot_horiz};
 rotation rot = rot_horiz;
 
 //int playerx = 10;
-//int playery = 5;
+//int playery = 0;
 
 #define CAM_ROT M_PI*2/33
 
@@ -43,10 +43,11 @@ void init(void)
   {
     for (int i=0;i<33;i++)
     {
-      cols[idx++] = {rand()%255,rand()%255,rand()%255}; // farbe tut's noch nicht richtig
+      cols[idx++] = {rand()%255/255.0f,rand()%255/255.0f,rand()%255/255.0f};
     }
   }
-//  for (int i=0;i<33;i++) cols[i] = {255,255,255}; // farbe tut's noch nicht richtig
+  for (int i=0;i<33;i++) cols[i] = {1.0f,0,0};
+  for (int i=0;i<33;i++) cols[9*33+i] = {1.0f,0,0};
   return;
 }
 
@@ -63,44 +64,44 @@ void display(void)
 
   if (rot==rot_horiz)
   {
-    cam.eye.x = -20.0f*sin(cam.t*0.2f);
-    cam.eye.y = -20.0f*cos(cam.t*0.2f);
+    cam.eye.x = -20.0f*sin(cam.t*0.2f)+0.01f; // es darf nicht alles 0 werden, s.u. up-Vektor!!
+    cam.eye.y = -20.0f*cos(cam.t*0.2f)+0.01f;
     cam.eye.z = 0.0f;
   }
   if (rot==rot_vert)
   {
-    cam.eye.x = -20.0f*sin(cam.t*0.2f);
+    cam.eye.x = -20.0f*sin(cam.t*0.2f)+0.01f;
     cam.eye.y = 0.0f;
-    cam.eye.z = -20.0f*cos(cam.t*0.2f);
+    cam.eye.z = -20.0f*cos(cam.t*0.2f)+0.01f;
   }
   std::cout << "----" << std::endl;
   std::cout << "t:" << cam.t << std::endl;
   std::cout << "x:" << cam.eye.x << std::endl;
   std::cout << "y:" << cam.eye.y << std::endl;
   std::cout << "z:" << cam.eye.z << std::endl;
-  dreidee::vec3 center;
+  dreidee::vec3f center;
   center.x = 0.0f;
   center.y = 0.0f;
   center.z = 0.0f;
-  dreidee::vec3 dir;
+  dreidee::vec3f dir;
   dir.x = center.x-cam.eye.x;
   dir.y = center.y-cam.eye.y;
   dir.z = center.z-cam.eye.z;
   // https://www.onlinemathe.de/forum/Bestimmung-zueinander-orthogonaler-Vektoren-2
-  dreidee::vec3 up;
+  dreidee::vec3f up;
   up.x = dir.z;
-  up.y = 0;
+  up.y = 0.0f;
   up.z = abs(dir.x);
   gluLookAt(cam.eye.x, cam.eye.y, cam.eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
 
   float fcenter = 0.0f;
   float fradius = 2.0f;
   int idx=0;
-  for (int z = -5;z<=5;z++)
+  for (int z=-5;z<5;z++)
   {
     for (int i=0;i<33;i++)
     {
-      glColor3b(cols[idx].x, cols[idx].y, cols[idx++].z); // pre-calculated, could be replaces with level-map
+      glColor3f(cols[idx].x, cols[idx].y, cols[idx++].z); // pre-calculated, could be replaces with level-map
 
       // optimieren!! nicht mehrfach berechnen --> Quadstrip --> Triangles
       glBegin(GL_QUADS);
@@ -235,7 +236,7 @@ int main(int argc, char * argv[]) {
   /* init GL */
   glClearColor(1.0, 1.0, 1.0, 0.0);
   glColor3f(0.0, 0.0, 0.0);
-  glLineWidth(3.0);
+  glLineWidth(2.0);
   
   glEnable(GL_DEPTH_TEST);
   // Cull backfacing polygons

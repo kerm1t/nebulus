@@ -19,7 +19,7 @@ namespace dreidee
     int z;
   };
 
-  struct  vec3 {
+  struct  vec3f {
     float x;
     float y;
     float z;

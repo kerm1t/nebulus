@@ -16,9 +16,9 @@
 
 // perspective view
 struct camera {
-  dreidee::vec3 eye;
-  dreidee::vec3 center;
-  dreidee::vec3 up;
+  dreidee::vec3f eye;
+  dreidee::vec3f center;
+  dreidee::vec3f up;
   int t;
 };
 
