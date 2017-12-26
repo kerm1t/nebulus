@@ -9,8 +9,16 @@
 #ifndef dreidee_h
 #define dreidee_h
 
+//#define M_PI 3.1415926535897932384626433832795
+
 namespace dreidee
 {
+  struct  vec3i {
+    int x;
+    int y;
+    int z;
+  };
+
   struct  vec3 {
     float x;
     float y;
