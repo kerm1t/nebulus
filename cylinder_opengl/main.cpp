@@ -19,6 +19,12 @@ int wd;                   /* GLUT window handle */
 camera cam;
 dreidee::vec3i cols[11*33];
 
+enum rotation {rot_vert, rot_horiz};
+rotation rot = rot_horiz;
+
+//int playerx = 10;
+//int playery = 5;
+
 #define CAM_ROT M_PI*2/33
 
 /* Program initialization NOT OpenGL/GLUT dependent,
@@ -37,9 +43,10 @@ void init(void)
   {
     for (int i=0;i<33;i++)
     {
-      cols[idx++] = {rand()%255,rand()%255,rand()%255};
+      cols[idx++] = {rand()%255,rand()%255,rand()%255}; // farbe tut's noch nicht richtig
     }
   }
+//  for (int i=0;i<33;i++) cols[i] = {255,255,255}; // farbe tut's noch nicht richtig
   return;
 }
 
@@ -49,16 +56,24 @@ void init(void)
 void display(void)
 {
   /* clear the screen to white */
-//  glClear(GL_COLOR_BUFFER_BIT);
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); //Bildpuffer und Z-Buffer zurücksetzen
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Bildpuffer und Z-Buffer zurücksetzen
 
   glLoadIdentity();
   gluPerspective(45, 1.33, 0.1, 100);
-//    glTranslatef(0,0,camz);
-//  glTranslatef(0,-20.0f*sin(cam.t*0.2f),-20.0f*cos(cam.t*0.2f));
 
-  cam.eye.x = -20.0f*sin(cam.t*0.2f);
-  cam.eye.y = -20.0f*cos(cam.t*0.2f);
+  if (rot==rot_horiz)
+  {
+    cam.eye.x = -20.0f*sin(cam.t*0.2f);
+    cam.eye.y = -20.0f*cos(cam.t*0.2f);
+    cam.eye.z = 0.0f;
+  }
+  if (rot==rot_vert)
+  {
+    cam.eye.x = -20.0f*sin(cam.t*0.2f);
+    cam.eye.y = 0.0f;
+    cam.eye.z = -20.0f*cos(cam.t*0.2f);
+  }
+  std::cout << "----" << std::endl;
   std::cout << "t:" << cam.t << std::endl;
   std::cout << "x:" << cam.eye.x << std::endl;
   std::cout << "y:" << cam.eye.y << std::endl;
@@ -71,10 +86,11 @@ void display(void)
   dir.x = center.x-cam.eye.x;
   dir.y = center.y-cam.eye.y;
   dir.z = center.z-cam.eye.z;
+  // https://www.onlinemathe.de/forum/Bestimmung-zueinander-orthogonaler-Vektoren-2
   dreidee::vec3 up;
-  up.x = -dir.z;
+  up.x = dir.z;
   up.y = 0;
-  up.z = dir.x;
+  up.z = abs(dir.x);
   gluLookAt(cam.eye.x, cam.eye.y, cam.eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
 
   float fcenter = 0.0f;
@@ -137,9 +153,6 @@ void reshape(int w, int h)
    system set to first quadrant, limited by screen/window size */
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-//    glOrtho(0.0, width, 0.0, height, -1.f, 1.f);
-//    glFrustum(-1, 1.0, -1.0, 1.0, 1.5, 20.0);
-//    glFrustum(-10.0f, 10.0f, -10.0f, 10.0f, 1.5f, 3.0f);
   gluPerspective(45, 1.33, 0.1, 10.0);
   return;
 }
@@ -163,20 +176,20 @@ void SpecialInput(int key, int x, int y)
   switch(key)
   {
     case GLUT_KEY_UP:
-      //do something here
+      rot = rot_vert;
+      cam.t = (cam.t+1) % 34;
       break;
     case GLUT_KEY_DOWN:
-      //do something here
+      rot = rot_vert;
+      cam.t = (cam.t-1) % 34;
       break;
     case GLUT_KEY_LEFT:
-      //do something here
+      rot = rot_horiz;
       cam.t = (cam.t+1) % 34;
-//      cam.eye.z--;
       break;
     case GLUT_KEY_RIGHT:
-      //do something here
+      rot = rot_horiz;
       cam.t = (cam.t-1) % 34;
-//      cam.eye.z++;
       break;
   }
 
@@ -225,6 +238,10 @@ int main(int argc, char * argv[]) {
   glLineWidth(3.0);
   
   glEnable(GL_DEPTH_TEST);
+  // Cull backfacing polygons
+  glCullFace(GL_BACK);
+  glEnable(GL_CULL_FACE);
+  
 
   /* start the GLUT main loop */
   glutMainLoop();
